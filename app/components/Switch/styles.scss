@@ -1,0 +1,14 @@
+.switch {
+  input[type="checkbox"] + .toggleBackground {
+    @apply w-11 h-6 bg-gray-200 border-green-500 border rounded-full;
+  }
+  input[type="checkbox"] + .toggleBackground {
+    @apply after:absolute after:flex after:top-0.5 after:bottom-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:transition-all after:border;
+  }
+  input[type="checkbox"]:checked + .toggleBackground {
+    @apply bg-green-500;
+  }
+  input[type="checkbox"]:checked + .toggleBackground {
+    @apply after:translate-x-full after:border-0;
+  }
+}
