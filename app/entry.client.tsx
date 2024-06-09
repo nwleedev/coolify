@@ -7,12 +7,15 @@
 import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
+import { ModalProvider } from "./contexts/modal";
 
 startTransition(() => {
   hydrateRoot(
     document,
     <StrictMode>
-      <RemixBrowser />
+      <ModalProvider>
+        <RemixBrowser />
+      </ModalProvider>
     </StrictMode>
   );
 });

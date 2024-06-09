@@ -11,6 +11,7 @@ import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
+import { ModalProvider } from "./contexts/modal";
 
 const ABORT_DELAY = 5_000;
 
@@ -48,11 +49,13 @@ function handleBotRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
+      <ModalProvider>
+        <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+        />
+      </ModalProvider>,
       {
         onAllReady() {
           shellRendered = true;
@@ -60,6 +63,10 @@ function handleBotRequest(
           const stream = createReadableStreamFromReadable(body);
 
           responseHeaders.set("Content-Type", "text/html");
+          responseHeaders.set(
+            "cache-control",
+            "public, max-age=604800, s-max-age=604800, must-revalidate"
+          );
 
           resolve(
             new Response(stream, {
@@ -98,18 +105,24 @@ function handleBrowserRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
+      <ModalProvider>
+        <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+        />
+      </ModalProvider>,
       {
         onShellReady() {
           shellRendered = true;
           const body = new PassThrough();
           const stream = createReadableStreamFromReadable(body);
 
-          responseHeaders.set("Content-Type", "text/html");
+          responseHeaders.set("content-type", "text/html");
+          responseHeaders.set(
+            "cache-control",
+            "public, max-age=604800, s-max-age=604800, must-revalidate"
+          );
 
           resolve(
             new Response(stream, {
