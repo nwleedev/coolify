@@ -26,7 +26,6 @@ async function text(
       type: hasJson ? "json_object" : "text",
     },
   });
-  console.log(response);
 
   const content = response.choices
     .map((choice) => choice.message.content)

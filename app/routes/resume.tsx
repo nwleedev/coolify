@@ -105,7 +105,6 @@ export async function action(args: ActionFunctionArgs) {
         .addResume(resume)
         .resolve()
     );
-    console.log("created", created);
     const parsed = created.replace(/```json|```yaml|```/g, "");
     const improvements = JSON.parse(parsed) as ResumeResponse;
     const mdxCode = await bundle(improvements.content);
