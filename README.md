@@ -1,36 +1,48 @@
-# Welcome to Remix + Vite!
+# Coolify
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/guides/vite) for details on supported features.
+**Improve your prompts and resumes much better.**
 
-## Development
+## Commands
 
-Run the Vite dev server:
+- `pnpm dev`
+- `pnpm build`
+- `pnpm start`
+- `pnpm sass` Compile scss files to css to use in Remix applications.
 
-```shellscript
-npm run dev
-```
+## Needed Envs
 
-## Deployment
+- `OPENAI_API_KEY` To use OpenAI APIs.
+- `GEMINI_FLASH_KEY` To use Gemini Flash APIs.
 
-First, build your app for production:
+## Pages
 
-```sh
-npm run build
-```
+- `/`
 
-Then run the app in production mode:
+  - The landing page
+  - Toggle the input prompts and improved.
+  - Toggle the input resumes and improved.
 
-```sh
-npm start
-```
+- `/prompt`
 
-Now you'll need to pick a host to deploy it to.
+  - Improve prompts
+  - Form
+    - Prompt
+    - Tokens: Minimum numbers of the rewritten prompts.
+    - Category: Indicates the prompts need knowledge of this category before running.
+  - Response
+    - The rewritten prompts.
+  - Modal
+    - Save the rewritten prompts to storages like `Local Storage`.
+    - Copy the prompts to clipboard.
 
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
+- `/resume`
+  - Improve resumes
+  - Form
+    - Resume
+    - Job Description
+  - Response
+    - Issues of the original resumes.
+    - The rewritten resumes.
+  - Modal
+    - Save the rewritten resumes to storages like `Local Storage`.
+    - Copy the resumes to clipboard.
