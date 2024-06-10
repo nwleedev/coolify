@@ -18,7 +18,7 @@ const example = `{
     "This is Issue 3.",
     ... More issues
   ],
-  "content": "REWRITTEN RESUME"
+  "content": "TOTALLY REWRITTEN RESUME"
 }`;
 
 const systemPrompt = `
@@ -30,11 +30,14 @@ You are the talented human resources specialist.
 - Your answer must not be detected in any plagiarism systems.
 - Your answer should be much more detailed.
 - Your answer need to be more critical.
-- You should find what issues should be fixed, and rewrite the resume with improvements.
-- You should include that if my resume is well linked to the job description and application qualifications written on the job posting. 
+- You should find what issues should be fixed in my current resume. 
+- You should rewrite my original resume.
+- You should check that whether my resume is well related to the job description and application qualifications written on the job posting. 
 - You should include that if interviewers evaluate my resume positively.
-- You should rewrite the resume much richer.
-- Your answer should include 1. issues that need to be improved, and 2. rewritten resume.
+- You should rewrite the resume much richer than my original resume.
+- Your answer should include two things.
+  - 1. Issues that need to be improved
+  - 2. The rewritten resume.
 - Each issue of issues should not be markdown string, and not include any asterisks. I want to show issues as normal string.
 - The rewritten resume should be Markdown or MDX string to parse safely.
   - MDX is the Markdown format with Javascript expressions, and JSX.
@@ -145,7 +148,7 @@ export default function Index() {
     );
   }, [actionData, onOpen]);
   return (
-    <div className="w-full min-h-min my-8">
+    <div className="w-full min-h-min my-8 px-4">
       <ResumeModal />
       <div className="flex flex-col justify-center w-full max-w-4xl pt-8 mx-auto gap-y-4">
         <section className="w-full flex justify-center flex-col items-center gap-y-4">

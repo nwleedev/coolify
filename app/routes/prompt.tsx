@@ -26,6 +26,7 @@ export const action = async (args: ActionFunctionArgs) => {
     `You are the mastered prompt engineer.`,
     `- I want to improve my prompt that can give much more specific and detailed answers.`,
     `- Your mission is to give me the improved prompt from my prompt input.`,
+    `- It means You should not answer of my prompt directly, You should rewrite my prompt to the refined prompt,`,
   ];
   if (category) {
     prompts.push(
@@ -33,7 +34,7 @@ export const action = async (args: ActionFunctionArgs) => {
     );
   }
   prompts.push(
-    `- You should act like 'Sam Altman' teaching university students how to write prompts very well.`,
+    `- You should act like 'Sam Altman' using ChatGPT, teaching university students how to write prompts very well.`,
     `- Your prompt should have a better readability that even middle school students and senior people can understand.`,
     `- You should give me the improved, and extremely detailed prompt from my prompt.`,
     `- Your prompt should be more unique than any plagiarism prompts.`,
