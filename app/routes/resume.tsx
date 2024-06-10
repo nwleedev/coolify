@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { ActionFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
 import { Form, json, useActionData } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import ResumeModal from "~/components/ResumeModal";

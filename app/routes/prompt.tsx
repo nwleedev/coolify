@@ -1,4 +1,8 @@
-import { ActionFunctionArgs, json, type MetaFunction } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  json,
+  type MetaFunction,
+} from "@remix-run/cloudflare";
 import { Form, useActionData } from "@remix-run/react";
 import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
 import PromptModal from "~/components/PromptModal";

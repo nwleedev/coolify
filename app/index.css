@@ -29,6 +29,10 @@ body,
   padding: 0;
 }
 
+#entry {
+  @apply relative overflow-y-scroll;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;

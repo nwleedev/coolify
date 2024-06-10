@@ -4,16 +4,19 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
-import { PassThrough } from "node:stream";
-
-import type { AppLoadContext, EntryContext } from "@remix-run/node";
-import { createReadableStreamFromReadable } from "@remix-run/node";
+import type { AppLoadContext, EntryContext } from "@remix-run/cloudflare";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
-import { renderToPipeableStream } from "react-dom/server";
+import { renderToReadableStream } from "react-dom/server";
 import { ModalProvider } from "./contexts/modal";
 
 const ABORT_DELAY = 5_000;
+
+function errorLog(error: unknown) {
+  if (process.env.NODE_ENV !== "production") {
+    console.error(error);
+  }
+}
 
 export default function handleRequest(
   request: Request,
@@ -40,114 +43,71 @@ export default function handleRequest(
       );
 }
 
-function handleBotRequest(
+async function handleBotRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
-  return new Promise((resolve, reject) => {
-    let shellRendered = false;
-    const { pipe, abort } = renderToPipeableStream(
-      <ModalProvider>
-        <RemixServer
-          context={remixContext}
-          url={request.url}
-          abortDelay={ABORT_DELAY}
-        />
-      </ModalProvider>,
-      {
-        onAllReady() {
-          shellRendered = true;
-          const body = new PassThrough();
-          const stream = createReadableStreamFromReadable(body);
+  const body = await renderToReadableStream(
+    <ModalProvider>
+      <RemixServer
+        context={remixContext}
+        url={request.url}
+        abortDelay={ABORT_DELAY}
+      />
+    </ModalProvider>,
+    {
+      signal: request.signal,
+      onError(error: unknown) {
+        errorLog(error);
+        responseStatusCode = 500;
+      },
+    }
+  );
+  responseHeaders.set("Content-Type", "text/html");
+  responseHeaders.set(
+    "cache-control",
+    "public, max-age=604800, s-max-age=604800, must-revalidate"
+  );
+  await body.allReady;
 
-          responseHeaders.set("Content-Type", "text/html");
-          responseHeaders.set(
-            "cache-control",
-            "public, max-age=604800, s-max-age=604800, must-revalidate"
-          );
-
-          resolve(
-            new Response(stream, {
-              headers: responseHeaders,
-              status: responseStatusCode,
-            })
-          );
-
-          pipe(body);
-        },
-        onShellError(error: unknown) {
-          reject(error);
-        },
-        onError(error: unknown) {
-          responseStatusCode = 500;
-          // Log streaming rendering errors from inside the shell.  Don't log
-          // errors encountered during initial shell rendering since they'll
-          // reject and get logged in handleDocumentRequest.
-          if (shellRendered) {
-            console.error(error);
-          }
-        },
-      }
-    );
-
-    setTimeout(abort, ABORT_DELAY);
+  return new Response(body, {
+    headers: responseHeaders,
+    status: responseStatusCode,
   });
 }
 
-function handleBrowserRequest(
+async function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
-  return new Promise((resolve, reject) => {
-    let shellRendered = false;
-    const { pipe, abort } = renderToPipeableStream(
-      <ModalProvider>
-        <RemixServer
-          context={remixContext}
-          url={request.url}
-          abortDelay={ABORT_DELAY}
-        />
-      </ModalProvider>,
-      {
-        onShellReady() {
-          shellRendered = true;
-          const body = new PassThrough();
-          const stream = createReadableStreamFromReadable(body);
+  const body = await renderToReadableStream(
+    <ModalProvider>
+      <RemixServer
+        context={remixContext}
+        url={request.url}
+        abortDelay={ABORT_DELAY}
+      />
+    </ModalProvider>,
+    {
+      signal: request.signal,
+      onError(error: unknown) {
+        errorLog(error);
+        responseStatusCode = 500;
+      },
+    }
+  );
+  responseHeaders.set("Content-Type", "text/html");
+  responseHeaders.set(
+    "cache-control",
+    "public, max-age=604800, s-max-age=604800, must-revalidate"
+  );
 
-          responseHeaders.set("content-type", "text/html");
-          responseHeaders.set(
-            "cache-control",
-            "public, max-age=604800, s-max-age=604800, must-revalidate"
-          );
-
-          resolve(
-            new Response(stream, {
-              headers: responseHeaders,
-              status: responseStatusCode,
-            })
-          );
-
-          pipe(body);
-        },
-        onShellError(error: unknown) {
-          reject(error);
-        },
-        onError(error: unknown) {
-          responseStatusCode = 500;
-          // Log streaming rendering errors from inside the shell.  Don't log
-          // errors encountered during initial shell rendering since they'll
-          // reject and get logged in handleDocumentRequest.
-          if (shellRendered) {
-            console.error(error);
-          }
-        },
-      }
-    );
-
-    setTimeout(abort, ABORT_DELAY);
+  return new Response(body, {
+    headers: responseHeaders,
+    status: responseStatusCode,
   });
 }

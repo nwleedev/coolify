@@ -1,4 +1,8 @@
-import { ActionFunctionArgs, json, type MetaFunction } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  json,
+  type MetaFunction,
+} from "@remix-run/cloudflare";
 import { Link } from "@remix-run/react";
 import PromptModal from "~/components/PromptModal";
 import PromptToggle from "~/components/PromptToggle";
