@@ -68,20 +68,16 @@ const Textarea = forwardRef(function Textarea(
   );
 
   useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        if (ref.current && entry.target.contains(ref.current)) {
-          setHeight(ref.current.clientHeight);
-        }
-      });
-    });
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-    return () => {
-      observer.disconnect();
+    const onBeforeUnload = function () {
+      if (ref.current && ref.current.clientHeight) {
+        setHeight(ref.current.clientHeight);
+      }
     };
-  }, [props.name, setHeight]);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [setHeight]);
 
   useEffect(() => {
     if (isHydrated && ref.current && storedHeight !== undefined) {
