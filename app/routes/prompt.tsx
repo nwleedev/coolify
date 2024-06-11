@@ -1,9 +1,10 @@
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import {
   ActionFunctionArgs,
   json,
   type MetaFunction,
 } from "@remix-run/cloudflare";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
 import PromptModal from "~/components/PromptModal";
 import Textarea from "~/components/Textarea";
@@ -63,6 +64,7 @@ export const action = async (args: ActionFunctionArgs) => {
 
 export default function Index() {
   const actionData = useActionData<typeof action>();
+  const navigation = useNavigation();
   const { onOpen } = usePromptModal();
   const [storedPrompt] = useLocalStorage<string>("app:previousPrompt");
 
@@ -121,7 +123,7 @@ export default function Index() {
       <div className="flex flex-col max-w-2xl w-full h-full mx-auto gap-y-4">
         <section className="flex flex-col w-full gap-y-2">
           {actionData && (
-            <div className="bg-green-500 border border-green-500 px-2 py-2 rounded flex gap-x-2 items-center">
+            <div className="bg-green-500 border border-green-500 px-4 py-2 rounded flex gap-x-2 items-center">
               <p className="text-white font-semibold">
                 A new prompt is created.
               </p>
@@ -140,24 +142,12 @@ export default function Index() {
               </button>
             </div>
           )}
-          {storedPrompt && (
-            <div className="border-green-500 border text-green-500 bg-white px-2 py-2 rounded flex gap-x-2 items-center">
-              <p className="text-green-500 font-semibold">
-                Click to show the previous prompt.
+          {navigation.state === "submitting" && (
+            <div className="bg-rose-500 border border-rose-500 px-4 py-2 rounded flex gap-x-2 items-center">
+              <p className="text-white font-medium flex gap-x-2 sm:text-base text-sm">
+                Improving the prompt. Do not close this page.
               </p>
-              <button
-                className="py-0.5 w-16 text-center bg-green-500 text-white tracking-wide rounded text-sm"
-                onClick={() => {
-                  if (storedPrompt) {
-                    onOpen(storedPrompt);
-                  }
-                }}
-              >
-                CLICK
-              </button>
-              <button className="text-green-500 tracking-wide rounded text-sm ml-auto mr-1">
-                CLOSE
-              </button>
+              <ArrowPathIcon className="w-6 h-6 animate-spin text-white ml-auto" />
             </div>
           )}
         </section>
@@ -166,7 +156,7 @@ export default function Index() {
           className="w-full flex flex-col h-full gap-y-4 mt-4"
         >
           <div className="flex flex-col w-full gap-y-0.5">
-            <label htmlFor="prompt" className="text-xl font-semibold">
+            <label htmlFor="prompt" className="text-2xl font-semibold">
               Prompt
             </label>
             <Textarea
@@ -218,14 +208,38 @@ export default function Index() {
               Write down what knowledge your prompt needs.
             </p>
           </div>
-          <button
-            className="px-4 py-1.5 text-white uppercase rounded bg-blue-600"
-            disabled={isDisabled}
-            type="submit"
-          >
-            New Prompt
-          </button>
+          {(isDisabled || navigation.state === "submitting") && (
+            <button
+              className="px-4 py-1.5 text-white uppercase rounded bg-gray-500"
+              disabled={isDisabled}
+              type="submit"
+            >
+              Submitting...
+            </button>
+          )}
+          {!isDisabled && (
+            <button
+              className="px-4 py-1.5 text-white uppercase rounded bg-blue-600"
+              type="submit"
+            >
+              New Prompt
+            </button>
+          )}
         </Form>
+        {storedPrompt && (
+          <div>
+            <button
+              onClick={() => {
+                if (storedPrompt) {
+                  onOpen(storedPrompt);
+                }
+              }}
+              className="text-blue-600 font-light uppercase text-sm relative px-1 py-0.5 cursor-pointer after:bg-blue-600 after:w-full after:h-px after:bottom-0 after:left-0 after:absolute"
+            >
+              Show the saved prompt
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

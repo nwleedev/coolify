@@ -130,7 +130,7 @@ export default function ResumeModal() {
           </section>
         )}
         {menu === 1 && (
-          <div className="flex flex-col w-full gap-y-2">
+          <>
             <div className="w-full gap-x-1 flex justify-end items-center">
               <p className="font-lato text-sm">Format Resume</p>
               <Switch
@@ -145,7 +145,7 @@ export default function ResumeModal() {
               </div>
             ) : (
               <Textarea
-                className="h-full w-full border-2 rounded outline-none focus:border-blue-500 py-0.5 px-1 min-h-60 font-light mt-4"
+                className="h-full w-full border-2 rounded outline-none focus:border-blue-500 py-0.5 px-1 min-h-60 mt-4"
                 ref={(element) => (textareaRef.current = element)}
               />
             )}
@@ -162,9 +162,9 @@ export default function ResumeModal() {
                 &nbsp;
               </p>
             </div>
-          </div>
+          </>
         )}
-        <div className="flex items-center gap-x-2 mx-auto mt-4">
+        <div className="flex items-center gap-x-2 mx-auto mt-auto mb-0.5">
           {menu === 0 && (
             <>
               <button

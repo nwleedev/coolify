@@ -1,5 +1,6 @@
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
-import { Form, json, useActionData } from "@remix-run/react";
+import { Form, json, useActionData, useNavigation } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import ResumeModal from "~/components/ResumeModal";
 import Textarea from "~/components/Textarea";
@@ -129,6 +130,7 @@ export async function action(args: ActionFunctionArgs) {
 export default function Index() {
   const actionData = useActionData<typeof action>();
   const textareaRef = useRef(null as HTMLTextAreaElement | null);
+  const navigation = useNavigation();
   const { onOpen } = useResumeModal();
   const isHydrated = useIsHydrated();
   const [storedResume] = useLocalStorage<ResumePayload>("app:previousResume");
@@ -162,8 +164,8 @@ export default function Index() {
           </p>
         </section>
         {actionData && (
-          <div className="bg-green-500 border border-green-500 px-2 py-2 rounded flex gap-x-2 items-center">
-            <p className="text-white font-semibold">A new prompt is created.</p>
+          <div className="bg-green-500 border border-green-500 px-4 py-2 rounded flex gap-x-2 items-center">
+            <p className="text-white font-semibold">A new resume is created.</p>
             <button
               className="py-0.5 w-16 text-center bg-white text-green-500 border-green-500 tracking-wide rounded text-sm"
               onClick={() => {
@@ -184,29 +186,17 @@ export default function Index() {
             </button>
           </div>
         )}
-        {storedResume && (
-          <div className="border-green-500 border text-green-500 bg-white px-2 py-2 rounded flex gap-x-2 items-center">
-            <p className="text-green-500 font-semibold">
-              Click to show the previous resume.
+        {navigation.state === "submitting" && (
+          <div className="border-rose-500 border bg-rose-500 text-white px-4 py-2 rounded flex gap-x-2 items-center">
+            <p className="text-white font-semibold">
+              Improving the resume. Do not close this page.
             </p>
-            <button
-              className="py-0.5 w-16 text-center bg-green-500 text-white tracking-wide rounded text-sm"
-              onClick={() => {
-                if (storedResume) {
-                  onOpen(storedResume);
-                }
-              }}
-            >
-              CLICK
-            </button>
-            <button className="text-green-500 tracking-wide rounded text-sm ml-auto mr-1">
-              CLOSE
-            </button>
+            <ArrowPathIcon className="w-6 h-6 animate-spin text-white ml-auto" />
           </div>
         )}
-        <Form className="w-full mt-8 gap-y-4 flex flex-col" method="POST">
+        <Form className="w-full mt-4 gap-y-4 flex flex-col" method="POST">
           <div className="flex flex-col w-full gap-y-0.5">
-            <label htmlFor="resumeInput" className="text-xl font-semibold">
+            <label htmlFor="resumeInput" className="text-2xl font-semibold">
               Resume
             </label>
             <Textarea
@@ -230,13 +220,37 @@ export default function Index() {
               The detailed job description can help to improve your resume.
             </p>
           </div>
-          <button
-            className="px-4 py-1.5 text-white uppercase rounded bg-blue-600 tracking-wide"
-            type="submit"
-          >
-            Rewrite Resume
-          </button>
+          {navigation.state === "submitting" && (
+            <button
+              className="px-4 py-1.5 text-white uppercase rounded bg-gray-500 tracking-wide"
+              type="submit"
+            >
+              Submitting...
+            </button>
+          )}
+          {navigation.state !== "submitting" && (
+            <button
+              className="px-4 py-1.5 text-white uppercase rounded bg-blue-600 tracking-wide"
+              type="submit"
+            >
+              Rewrite Resume
+            </button>
+          )}
         </Form>
+        {storedResume && (
+          <div>
+            <button
+              onClick={() => {
+                if (storedResume) {
+                  onOpen(storedResume);
+                }
+              }}
+              className="text-blue-600 font-light uppercase text-sm relative px-1 py-0.5 cursor-pointer after:bg-blue-600 after:w-full after:h-px after:bottom-0 after:left-0 after:absolute"
+            >
+              Show the saved resume
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -65,7 +65,7 @@ export default function PromptModal() {
           </p>
         </div>
         <Textarea
-          className="h-full w-full border-2 rounded outline-none focus:border-blue-500 py-0.5 px-1 min-h-60 font-light mt-4"
+          className="h-full w-full border-2 rounded outline-none focus:border-blue-500 py-0.5 px-1 min-h-60 mt-4"
           ref={(element) => (textareaRef.current = element)}
         />
         <div
