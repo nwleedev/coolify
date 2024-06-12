@@ -9,12 +9,13 @@ import {
   useRef,
 } from "react";
 import useIsHydrated from "~/hooks/useIsHydrated";
-import useLocalStorage, { storageKey } from "~/hooks/useLocalStorage";
+import useLocalStorage, { toStorageKey } from "~/hooks/useLocalStorage";
 
 export interface TextareaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   className?: string;
   hasTab?: boolean;
+  storageKey?: string;
 }
 
 const Textarea = forwardRef(function Textarea(
@@ -25,12 +26,13 @@ const Textarea = forwardRef(function Textarea(
     className,
     onKeyDown: onKeyDownProp,
     hasTab = true,
+    storageKey,
     ...others
   } = props;
   const ref = useRef(null as HTMLTextAreaElement | null);
   const [, forceUpdate] = useReducer(() => [], []);
   const [storedHeight, setHeight] = useLocalStorage<number>(
-    storageKey("app:textarea", props.name)
+    toStorageKey("app:textarea", storageKey)
   );
   const isHydrated = useIsHydrated();
 

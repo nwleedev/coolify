@@ -91,6 +91,6 @@ const useLocalStorage = <V>(key?: string, initialValue?: V) => {
 
 export default useLocalStorage;
 
-export function storageKey(prefix: string, name?: string) {
+export function toStorageKey(prefix: string, name?: string) {
   return name !== undefined ? `${prefix}:${name}` : undefined;
 }
