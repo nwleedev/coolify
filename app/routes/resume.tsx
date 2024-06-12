@@ -5,7 +5,6 @@ import { useEffect, useRef } from "react";
 import ResumeModal from "~/components/ResumeModal";
 import Textarea from "~/components/Textarea";
 import { ResumePayload } from "~/contexts/modal";
-import useIsHydrated from "~/hooks/useIsHydrated";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import useResumeModal from "~/hooks/useResumeModal";
 import ai from "~/libs/flash.server";
@@ -79,10 +78,10 @@ interface ResumeResponse {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Rewritely" },
+    { title: "Coolify" },
     {
       name: "description",
-      content: "Your resume can be better with Rewritely.",
+      content: "Improve your resume better with Coolify.",
     },
   ];
 };
@@ -132,7 +131,6 @@ export default function Index() {
   const textareaRef = useRef(null as HTMLTextAreaElement | null);
   const navigation = useNavigation();
   const { onOpen } = useResumeModal();
-  const isHydrated = useIsHydrated();
   const [storedResume] = useLocalStorage<ResumePayload>("app:previousResume");
   useEffect(() => {
     if (!actionData) {

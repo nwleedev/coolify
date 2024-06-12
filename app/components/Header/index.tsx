@@ -14,6 +14,8 @@ export default function Header() {
           <Link to={"/prompt"}>Prompt</Link>
           <div className="bg-gray-600 w-[2px] h-6" />
           <Link to={"/resume"}>Resume</Link>
+          <div className="bg-gray-600 w-[2px] h-6" />
+          <Link to={"/letter"}>Cover Letter</Link>
         </nav>
       </div>
     </header>
