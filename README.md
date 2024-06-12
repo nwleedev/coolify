@@ -27,22 +27,36 @@
   - Improve prompts
   - Form
     - Prompt
-    - Tokens: Minimum numbers of the rewritten prompts.
-    - Category: Indicates the prompts need knowledge of this category before running.
+    - Tokens: Minimum numbers of the rewritten prompt.
+    - Category: Indicates that the prompt need knowledge of this category before running.
   - Response
-    - The rewritten prompts.
+    - The rewritten prompt.
   - Modal
-    - Save the rewritten prompts to storages like `Local Storage`.
-    - Copy the prompts to clipboard.
+    - Save the rewritten prompt to storages like `Local Storage`.
+    - Copy the prompt to clipboard.
 
 - `/resume`
+
   - Improve resumes
   - Form
     - Resume
     - Job Description
   - Response
-    - Issues of the original resumes.
-    - The rewritten resumes.
+    - Issues of the original resume.
+    - The rewritten resume.
   - Modal
-    - Save the rewritten resumes to storages like `Local Storage`.
-    - Copy the resumes to clipboard.
+    - Save the rewritten resume to storages like `Local Storage`.
+    - Copy the resume to clipboard.
+
+- `/letter`
+
+  - Improve cover letters
+  - Form
+    - Cover letter
+    - Tokens: Minimum numbers of the rewritten cover letter.
+    - Job Description
+  - Response
+    - The rewritten cover letter.
+  - Modal
+    - Save the rewritten cover letter to storages like `Local Storage`.
+    - Copy the letter to clipboard.
